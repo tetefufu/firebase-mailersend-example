@@ -1,15 +1,13 @@
-import { onSchedule } from 'firebase-functions/v2/scheduler';
-import * as admin from 'firebase-admin';
-import { sendMonthlyEmails } from './mail';
+import {setGlobalOptions} from "firebase-functions";
+import {onSchedule} from "firebase-functions/v2/scheduler";
+import * as logger from "firebase-functions/logger";
 
-admin.initializeApp();
 
-export const monthlyEmail = onSchedule(
-  {
-    schedule: '0 9 1 * *', // Run at 9am UTC on 1st of each month
-    timeZone: 'UTC',
-  },
-  async () => {
-    await sendMonthlyEmails();
-  }
-);
+setGlobalOptions({maxInstances: 10});
+
+export const logEveryFiveMinutes = onSchedule({
+  schedule: "every 5 minutes",
+  timeZone: "UTC",
+}, async () => {
+  logger.info("Scheduled function ran: logging every 5 minutes", {structuredData: true});
+});
