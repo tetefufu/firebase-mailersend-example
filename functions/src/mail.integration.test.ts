@@ -1,6 +1,8 @@
 import { sendMonthlyEmails } from './mail';
 import * as admin from 'firebase-admin';
 
+jest.setTimeout(20000); // 20 seconds
+
 describe('sendMonthlyEmails (integration)', () => {
   beforeAll(() => {
     if (!admin.apps.length) {

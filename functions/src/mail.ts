@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { Recipient, MailerSend, EmailParams, Sender } from 'mailersend';
 import * as admin from 'firebase-admin';
 
@@ -12,6 +13,7 @@ export async function sendMonthlyEmails() {
   const emailPromises = [];
 
   for (const doc of usersSnap.docs) {
+    console.log(`Processing user: ${doc.id}`);
     const user = doc.data();
     if (!user.email) continue;
 
