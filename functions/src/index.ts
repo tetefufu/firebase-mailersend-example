@@ -1,6 +1,7 @@
 import {setGlobalOptions} from "firebase-functions";
 import {onSchedule} from "firebase-functions/v2/scheduler";
 import * as logger from "firebase-functions/logger";
+import {sendMonthlyEmails} from "./mail";
 
 
 setGlobalOptions({maxInstances: 10});
@@ -10,4 +11,6 @@ export const logEveryMonth = onSchedule({
   timeZone: "UTC",
 }, async () => {
   logger.info("Scheduled function ran: logging every month", {structuredData: true});
+  await sendMonthlyEmails();
+  logger.info("sendMonthlyEmails completed successfully", {structuredData: true});
 });
