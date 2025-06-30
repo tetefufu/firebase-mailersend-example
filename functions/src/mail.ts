@@ -5,6 +5,11 @@ import {defineSecret} from "firebase-functions/params";
 export const gmailUser = defineSecret("GMAIL_USER");
 export const gmailPass = defineSecret("GMAIL_PASS");
 
+/**
+ * Sends a monthly email to a list of users using Gmail via nodemailer.
+ * Credentials are loaded from Firebase secrets in production or from .env locally.
+ * @return {Promise<void>} Resolves when all emails have been sent.
+ */
 export async function sendMonthlyEmails() {
   const user = process.env.GMAIL_USER || gmailUser.value();
   const pass = process.env.GMAIL_PASS || gmailPass.value();
