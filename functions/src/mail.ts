@@ -1,6 +1,6 @@
-import 'dotenv/config';
+import "dotenv/config";
 import * as nodemailer from "nodemailer";
-import { defineSecret } from "firebase-functions/params";
+import {defineSecret} from "firebase-functions/params";
 
 // Define secrets for Firebase Functions v2
 export const gmailUser = defineSecret("GMAIL_USER");
@@ -13,7 +13,7 @@ export async function sendMonthlyEmails() {
 
   const transporter = nodemailer.createTransport({
     service: "gmail",
-    auth: { user, pass },
+    auth: {user, pass},
   });
 
   const emailPromises = [];
@@ -25,7 +25,7 @@ export async function sendMonthlyEmails() {
         to: email,
         subject: "Your Monthly Report",
         text: "Hi there,\nThis is your monthly update!",
-        html: `<p>This is your monthly update!</p>`
+        html: "<p>This is your monthly update!</p>",
       })
     );
   }
