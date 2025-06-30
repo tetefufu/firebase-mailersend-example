@@ -1,28 +1,33 @@
 import 'dotenv/config';
-import { Recipient, MailerSend, EmailParams, Sender } from 'mailersend';
+import * as nodemailer from "nodemailer";
+import { defineSecret } from "firebase-functions/params";
 
-const mailerSend = new MailerSend({
-  apiKey: process.env.MAILERSEND_API_KEY!,
-});
+// Define secrets for Firebase Functions v2
+export const gmailUser = defineSecret("GMAIL_USER");
+export const gmailPass = defineSecret("GMAIL_PASS");
 
 export async function sendMonthlyEmails() {
+  // For local dev, fallback to process.env (dotenv)
+  const user = process.env.GMAIL_USER || gmailUser.value();
+  const pass = process.env.GMAIL_PASS || gmailPass.value();
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: { user, pass },
+  });
+
   const emailPromises = [];
-
-  for (const email of ['joelbellot@hotmail.com', 'saks46@hotmail.com']) { 
+  for (const email of ["joelbellot@hotmail.com", "saks46@hotmail.com"]) {
     console.log(`Processing user: ${email}`);
-
-    const sentFrom = new Sender('you@yourdomain.com', 'Your App');
-    const recipients = [new Recipient(email, 'User')];
-
-    const emailParams = new EmailParams()
-      .setFrom(sentFrom)
-      .setTo(recipients)
-      .setSubject('Your Monthly Report')
-      .setHtml(`<p>This is your monthly update!</p>`)
-      .setText(`Hi there,\nThis is your monthly update!`);
-
-    emailPromises.push(mailerSend.email.send(emailParams));
+    emailPromises.push(
+      transporter.sendMail({
+        from: user,
+        to: email,
+        subject: "Your Monthly Report",
+        text: "Hi there,\nThis is your monthly update!",
+        html: `<p>This is your monthly update!</p>`
+      })
+    );
   }
-
   await Promise.all(emailPromises);
 }
