@@ -10,7 +10,7 @@ export const logEveryMonth = onSchedule({
   schedule: "0 0 1 * *", // At 00:00 on day-of-month 1
   timeZone: "UTC",
 }, async () => {
-  logger.info("Scheduled function ran: logging every month", {structuredData: true});
+  logger.info("Scheduled function running...", {structuredData: true});
   await sendMonthlyEmails();
   logger.info("sendMonthlyEmails completed successfully", {structuredData: true});
 });
