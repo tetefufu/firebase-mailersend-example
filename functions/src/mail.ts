@@ -2,12 +2,10 @@ import "dotenv/config";
 import * as nodemailer from "nodemailer";
 import {defineSecret} from "firebase-functions/params";
 
-// Define secrets for Firebase Functions v2
 export const gmailUser = defineSecret("GMAIL_USER");
 export const gmailPass = defineSecret("GMAIL_PASS");
 
 export async function sendMonthlyEmails() {
-  // For local dev, fallback to process.env (dotenv)
   const user = process.env.GMAIL_USER || gmailUser.value();
   const pass = process.env.GMAIL_PASS || gmailPass.value();
 
